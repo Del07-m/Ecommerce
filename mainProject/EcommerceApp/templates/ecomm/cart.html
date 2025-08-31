@@ -1,0 +1,97 @@
+
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <title>Cart</title>
+</head>
+<body>
+    
+    {% block content %}
+<div class="container cart">
+<table>
+<tr>
+    <th>Product</th>
+
+    
+
+    <th>Quantity</th>
+
+    <th>SubTotal</th>
+</tr>
+
+
+<tr>
+    <td>
+
+        <div class="cart-info">
+            <img src="./images/book.jpg" alt="">
+
+            <div>
+                <p>Nike Shirt</p>
+                <small>56.78</small>
+            </div>
+           
+        </div>
+    </td>
+    <td>
+        <input type="number" value="1">
+    </td>
+
+    <td>34.56</td>
+</tr>
+
+
+<tr>
+    <td>
+
+        <div class="cart-info">
+            <img src="./images/book.jpg" alt="">
+
+            <div>
+                <p>Nike Shirt</p>
+                <small>56.78</small>
+            </div>
+           
+        </div>
+    </td>
+    <td>
+        <input type="number" value="1">
+    </td>
+
+    <td>34.56</td>
+</tr>
+
+
+<tr>
+    <td>
+
+        <div class="cart-info">
+            <img src="./images/book.jpg" alt="">
+
+            <div>
+                <p>Nike Shirt</p>
+                <small>56.78</small>
+            </div>
+           
+        </div>
+    </td>
+    <td>
+        <input type="number" value="1">
+    </td>
+
+    <td>34.56</td>
+</tr>
+
+</table>
+
+</div>
+
+{% end block %}
+</body>
+</html>
