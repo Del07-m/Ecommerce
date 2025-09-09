@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 from django.contrib.auth import login
 from .form import RegistrationForm
-
+from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 
@@ -14,18 +14,19 @@ import json
 
 # Create your views here.
 def store(request):
+    products = Product.objects.all()
 
-
-    products =   Product.objects.all()
+    if request.user.is_authenticated:
+        order, created = Order.objects.get_or_create(user=request.user, complete=False)
+        cartItems = sum(item.quantity for item in order.orderitem_set.all())
+    else:
+        cartItems = 0
 
     context = {
-
-        'products':products
+        'products': products,
+        'cartItems': cartItems
     }
-
-
-    return render(request,  'ecomm/store.html', context)
-
+    return render(request, 'ecomm/store.html', context)
 
 
 def cart(request):
@@ -33,53 +34,46 @@ def cart(request):
     return render(request, 'ecomm/cart.html' )
 
 
-import json
-from django.http import JsonResponse
+
 
 def updateCart(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid or empty JSON"}, status=400)
-
-        productId = data.get('productId')
-     
-
-        print("Product:", productId)
-
-        product = Product.objects.get(id=productId)
+    data = json.loads(request.body)
+    product_id = data['product_id']
+    product = Product.objects.get(id=product_id)
 
     if request.user.is_authenticated:
-        
+        # get or create order
+        order, created = Order.objects.get_or_create(user=request.user, complete=False)
 
-        order, created = Order.objects.get_or_create(user=request.user,complete = False)
+        # get or create order item
+        cartitem, created = OrderItem.objects.get_or_create(order=order, product=product)
 
-        orderItems, created = OrderItem.objects.get_or_create(order = order,product =product)
+        # increment quantity
+        cartitem.quantity += 1
+        cartitem.save()
 
-        orderItems.quantity += 1
+        cart_items = sum(item.quantity for item in order.orderitem_set.all())
+    else:
+        cart_items = 0  # for guests
 
-        orderItems.save()
-        return JsonResponse({"message": "Item updated!"}, status=200)
-
-    return JsonResponse({"error": "Invalid request"}, status=400)
-
-
-
-
-
-
-
-
-
+    return JsonResponse({
+    "message": "Its working",
+    "status": "success",
+    "cartItems": cart_items
+})
 
 
 
-def updateCart(request):
 
-    data = json.loads(request.body)
 
-    product_id = data[product_id]
+
+
+
+
+
+
+
+
 
     
 
