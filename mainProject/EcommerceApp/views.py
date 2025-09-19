@@ -31,6 +31,7 @@ def store(request):
 
 def cart(request):
     
+    
     return render(request, 'ecomm/cart.html' )
 
 

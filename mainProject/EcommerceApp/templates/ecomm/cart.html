@@ -1,97 +1,71 @@
-
+{% extends 'ecomm/base.html' %}
 {% load static %}
 
+{% block content %}
+<div class="container my-5">
+  <h2 class="mb-4 text-white">Cart</h2>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
-    <title>Cart</title>
-</head>
-<body>
-    
-    {% block content %}
-<div class="container cart">
-<table>
-<tr>
-    <th>Product</th>
+  <div class="row">
+    <!-- Cart Items -->
+    <div class="col-lg-8">
+      <table class="table table-dark table-striped align-middle">
+        <thead>
+          <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Image</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Total</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>
+              {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="60">
+              {% else %}
+                <span>No image</span>
+              {% endif %}
+            </td>
+            <td>${{ item.product.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.get_total }}</td>
+            <td>
+              <!-- ✅ Action buttons -->
+              <button data-product="{{ item.product.id }}" data-action="add"
+                      class="btn btn-sm btn-success update-cart">+</button>
 
-    
+              <button data-product="{{ item.product.id }}" data-action="remove"
+                      class="btn btn-sm btn-warning update-cart">-</button>
 
-    <th>Quantity</th>
+              <button data-product="{{ item.product.id }}" data-action="delete"
+                      class="btn btn-sm btn-danger update-cart">Remove</button>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center">Your cart is empty.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
-    <th>SubTotal</th>
-</tr>
-
-
-<tr>
-    <td>
-
-        <div class="cart-info">
-            <img src="./images/book.jpg" alt="">
-
-            <div>
-                <p>Nike Shirt</p>
-                <small>56.78</small>
-            </div>
-           
+    <!-- Order Summary -->
+    <div class="col-lg-4">
+      <div class="card text-bg-dark shadow-lg">
+        <div class="card-body">
+          <h4 class="card-title">Order Summary</h4>
+          <p class="card-text">Items: <span id="cart-total">{{ order.getcartItems }}</span></p>
+          <p class="card-text">Total: $<span id="cart-total-price">{{ order.get_cart_total }}</span></p>
+          
+         
         </div>
-    </td>
-    <td>
-        <input type="number" value="1">
-    </td>
-
-    <td>34.56</td>
-</tr>
-
-
-<tr>
-    <td>
-
-        <div class="cart-info">
-            <img src="./images/book.jpg" alt="">
-
-            <div>
-                <p>Nike Shirt</p>
-                <small>56.78</small>
-            </div>
-           
-        </div>
-    </td>
-    <td>
-        <input type="number" value="1">
-    </td>
-
-    <td>34.56</td>
-</tr>
-
-
-<tr>
-    <td>
-
-        <div class="cart-info">
-            <img src="./images/book.jpg" alt="">
-
-            <div>
-                <p>Nike Shirt</p>
-                <small>56.78</small>
-            </div>
-           
-        </div>
-    </td>
-    <td>
-        <input type="number" value="1">
-    </td>
-
-    <td>34.56</td>
-</tr>
-
-</table>
-
+      </div>
+    </div>
+  </div>
 </div>
-
-{% end block %}
-</body>
-</html>
+{% endblock %}
